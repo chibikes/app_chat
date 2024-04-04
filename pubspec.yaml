@@ -57,7 +57,12 @@ dependencies:
   firebase_messaging: ^14.7.10
   permission_handler: ^11.1.0
   supabase_extensions: ^1.0.0
-  dotenv: ^4.2.0
+  flutter_dotenv: ^5.1.0
+  image_picker: ^1.0.7
+  image_cropper: ^5.0.1
+  flutter_image_compress: ^2.2.0
+  bloc_concurrency: ^0.2.5
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +90,7 @@ flutter:
   assets:
     - assets/appchat.png
     - assets/profile_avatar.png
+    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
