@@ -104,6 +104,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   updateCountry(String country) {
     emit(state.copyWith(country: country));
+    _authenticationRepository.setPhoneCode(countryCodes[country] ?? '');
   }
 
   emailChanged(String value) {

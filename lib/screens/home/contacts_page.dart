@@ -3,6 +3,7 @@ import 'package:app_chat/blocs/messages_bloc/messages_bloc.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_event.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_state.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:domain_models/domain_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,7 +19,7 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   bool showSearchBar = false;
-  List<Contact> searchedContacts = [];
+  List<AppUser> searchedContacts = [];
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MessagesBloc, MessagesState>(builder: (context, state) {
@@ -38,17 +39,9 @@ class _ContactsPageState extends State<ContactsPage> {
                     onChanged: (value) {
                       setState(() {
                         searchedContacts = state.contacts.where((element) {
-                          final displayName = element.displayName ?? '',
-                              givenName = element.givenName ?? '',
-                              surname = element.familyName ?? '';
-                          return (displayName.contains(RegExp(
-                                  value.replaceAll(" ", ""),
-                                  caseSensitive: false))) ||
-                              givenName.contains(RegExp(
-                                  value.replaceAll(" ", ""),
-                                  caseSensitive: false)) ||
-                              surname.contains(RegExp(value.replaceAll(" ", ""),
-                                  caseSensitive: false));
+                          return element.fullName.contains(RegExp(
+                              value.replaceAll(" ", ""),
+                              caseSensitive: false));
                         }).toList();
                       });
                     },
@@ -77,16 +70,16 @@ class _ContactsPageState extends State<ContactsPage> {
                         onTap: () async {
                           context.read<MessagesBloc>().add(
                                 GetContactUserId(
-                                  phone: state.contacts[index].phones?.first
-                                          .value ??
-                                      '',
-                                ),
+                                    phone: state.contacts[index].phoneNumber),
                               );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: ((context) {
-                                return const MessageDetail();
+                                return MessageDetail(
+                                  chatName: state.contacts[index].fullName,
+                                  avatarUrl: state.contacts[index].avatarUrl,
+                                );
                               }),
                             ),
                           );
@@ -96,22 +89,24 @@ class _ContactsPageState extends State<ContactsPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                backgroundImage:
-                                    AssetImage('assets/profile_avatar.png'),
-                              ),
+                              state.contacts[index].avatarUrl.isNotEmpty
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          state.contacts[index].avatarUrl),
+                                    )
+                                  : const CircleAvatar(
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: AssetImage(
+                                          'assets/profile_avatar.png'),
+                                    ),
                               Column(
                                 children: [
                                   Text(
-                                    state.contacts[index].displayName ??
-                                        'Unknown user',
+                                    state.contacts[index].fullName,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w700),
                                   ),
-                                  Text(state.contacts[index].phones?.first
-                                          .value ??
-                                      'Unknown user'),
+                                  Text(state.contacts[index].phoneNumber),
                                 ],
                               ),
                               const SizedBox(),
@@ -127,18 +122,17 @@ class _ContactsPageState extends State<ContactsPage> {
                         onTap: () async {
                           context.read<MessagesBloc>().add(
                                 GetContactUserId(
-                                  phone: searchedContacts[index]
-                                          .phones
-                                          ?.first
-                                          .value ??
-                                      '',
+                                  phone: searchedContacts[index].phoneNumber,
                                 ),
                               );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: ((context) {
-                                return const MessageDetail();
+                                return MessageDetail(
+                                  chatName: state.contacts[index].fullName,
+                                  avatarUrl: state.contacts[index].avatarUrl,
+                                );
                               }),
                             ),
                           );
@@ -148,24 +142,24 @@ class _ContactsPageState extends State<ContactsPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                backgroundImage:
-                                    AssetImage('assets/profile_avatar.png'),
-                              ),
+                              searchedContacts[index].avatarUrl.isNotEmpty
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          searchedContacts[index].avatarUrl),
+                                    )
+                                  : const CircleAvatar(
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: AssetImage(
+                                          'assets/profile_avatar.png'),
+                                    ),
                               Column(
                                 children: [
                                   Text(
-                                    searchedContacts[index].displayName ??
-                                        'Unknown',
+                                    searchedContacts[index].fullName,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text(searchedContacts[index]
-                                          .phones
-                                          ?.first
-                                          .value ??
-                                      'Unknown'),
+                                  Text(searchedContacts[index].phoneNumber),
                                 ],
                               ),
                               const SizedBox(),

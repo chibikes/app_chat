@@ -20,10 +20,17 @@ class LogOut extends AuthenticationEvent {
   List<Object?> get props => [];
 }
 
-class UpdateUser extends AuthenticationEvent {
-  final Function userUpdateCallback;
-  UpdateUser(this.userUpdateCallback);
+class UpdateProfilePhoto extends AuthenticationEvent {
+  final bool getImageFromCamera;
+  final Color color;
 
+  UpdateProfilePhoto({this.getImageFromCamera = true, required this.color});
+
+  @override
+  List<Object?> get props => [];
+}
+
+class UpdateUser extends AuthenticationEvent {
   @override
   List<Object?> get props => [];
 }

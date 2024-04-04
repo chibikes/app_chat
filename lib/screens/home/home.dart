@@ -1,9 +1,10 @@
-import 'package:app_chat/blocs/authentication_blocs/authentication_bloc.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_bloc.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_event.dart';
+import 'package:app_chat/screens/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/authentication_blocs/authentication_bloc.dart';
 import 'calls.dart';
 import 'recent_messages.dart';
 
@@ -20,7 +21,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-    context.read<MessagesBloc>().add(GetRecentMessages());
+    context.read<MessagesBloc>().add(GetRecentMessages(
+        context.read<AuthenticationBloc>().state.user.userId));
     // _tabController.addListener(_handleTabChange);
     super.initState();
   }
@@ -43,19 +45,29 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             style: TextStyle(),
           ),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
-            child: Icon(Icons.person),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: ((context) {
+                        return const EditProfileScreen();
+                      }),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.person)),
           )
         ],
-        toolbarHeight: 20.0,
+        toolbarHeight: 40.0,
         elevation: 0.0,
         backgroundColor: Theme.of(context).primaryColor,
         bottom: TabBar(
           controller: _tabController,
           unselectedLabelColor: Colors.grey,
-          labelColor: Theme.of(context).textTheme.titleLarge!.color,
+          labelColor: Colors.white,
           indicatorWeight: 3.0,
           labelPadding: const EdgeInsets.symmetric(horizontal: 50.0),
           indicatorSize: TabBarIndicatorSize.tab,

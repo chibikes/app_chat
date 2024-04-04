@@ -7,7 +7,7 @@ class CallsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(itemBuilder: (context, index) {
-        return Row(
+        return const Row(
           children: [],
         );
       }),

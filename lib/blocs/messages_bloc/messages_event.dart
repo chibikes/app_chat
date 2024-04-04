@@ -3,13 +3,19 @@ import 'messages_state.dart';
 abstract class MessagesEvent {}
 
 class GetRecentMessages extends MessagesEvent {
-  GetRecentMessages();
+  final String id;
+
+  GetRecentMessages(this.id);
 }
 
 class GetUserMessages extends MessagesEvent {
+  GetUserMessages();
+}
+
+class UpdateChatId extends MessagesEvent {
   final String chatId;
 
-  GetUserMessages({required this.chatId});
+  UpdateChatId({required this.chatId});
 }
 
 class SendMessage extends MessagesEvent {

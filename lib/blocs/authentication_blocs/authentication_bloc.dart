@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:domain_models/domain_models.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+
+import '../../image_selector.dart';
 
 part 'authentication_state.dart';
 part 'authentication_event.dart';
@@ -10,18 +14,14 @@ part 'authentication_event.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthRepository _authRepository;
-  StreamSubscription? _firebaseUserSubscription;
-  StreamSubscription? _supabaseUserSubscription;
+  StreamSubscription? _userSubscription;
+  final ImageSelector _imageSelector = ImageSelector();
 
   AuthenticationBloc({
     required AuthRepository authRepository,
   })  : _authRepository = authRepository,
         super(const Uninitialized(UnverifiedUser())) {
-    _supabaseUserSubscription =
-        _authRepository.getSupaBaseUser().listen((event) {});
-
-    _firebaseUserSubscription =
-        _authRepository.getFirebaseUser().listen((event) {
+    _userSubscription = _authRepository.getUser().listen((event) {
       add(AuthenticationUserChanged(event));
     });
 
@@ -37,14 +37,23 @@ class AuthenticationBloc
       );
     });
 
-    on<UpdateUser>(
-        (event, emit) => _authRepository.updateUser(event.userUpdateCallback));
+    on<UpdateUser>((event, emit) => _authRepository.updateUserInfo());
+
+    on<UpdateProfilePhoto>((event, emit) async {
+      var filePath = '';
+      if (event.getImageFromCamera) {
+        filePath = await _imageSelector.getImageFromCamera(event.color);
+      } else {
+        filePath = await _imageSelector.getImageFromGallery(event.color);
+      }
+      _authRepository.uploadPhoto(filePath);
+    });
   }
 
   @override
-  Future<void> close() {
-    _firebaseUserSubscription?.cancel();
-    _supabaseUserSubscription?.cancel();
+  Future<void> close() async {
+    await _userSubscription?.cancel();
+    await _authRepository.cancelSubscriptions();
     return super.close();
   }
 }
