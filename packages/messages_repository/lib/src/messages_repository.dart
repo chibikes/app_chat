@@ -55,7 +55,10 @@ class MessagesRepository {
             table: _messagesTable,
             event: PostgresChangeEvent.insert,
             callback: (payload) {
-              print('payload is $payload');
+              if (payload.newRecord['sender_id'] != userId &&
+                  payload.newRecord['receiver_id'] != userId) {
+                return;
+              }
               // fetch recent messages
               Supabase.instance.client.rpc('get_msgs',
                   params: {'user_id': '$userId'}).then((value) {

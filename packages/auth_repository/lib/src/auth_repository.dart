@@ -158,7 +158,6 @@ class AuthRepository {
         print('Error trying to get user $err');
         _user = const dm_models.UnverifiedUser();
       }
-      print('user is ${_user.avatarUrl}');
       _userSubject.add(_user);
 
       _firebaseUserSub ??= getFirebaseUser().listen((event) {});
