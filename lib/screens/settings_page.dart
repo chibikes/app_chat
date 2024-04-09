@@ -164,6 +164,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 25.0),
                   ElevatedButton(
                     style: ButtonStyle(
+                      side: MaterialStateProperty.all(
+                        BorderSide(color: Theme.of(context).primaryColor),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
                       elevation: MaterialStateProperty.all(0.0),
                       shape: MaterialStateProperty.all(
                         const RoundedRectangleBorder(

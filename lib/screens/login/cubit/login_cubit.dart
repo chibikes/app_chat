@@ -6,7 +6,6 @@ import 'package:domain_models/domain_models.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/form_models/email.dart';
 import '../../../models/form_models/password.dart';
 

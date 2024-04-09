@@ -1,17 +1,15 @@
-import 'package:app_chat/blocs/authentication_blocs/authentication_bloc.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_bloc.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_event.dart';
 import 'package:app_chat/blocs/messages_bloc/messages_state.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:domain_models/domain_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'conversation.dart';
 
 class ContactsPage extends StatefulWidget {
-  const ContactsPage({super.key});
+  const ContactsPage({super.key, required this.callContact});
+  final bool callContact;
 
   @override
   State<ContactsPage> createState() => _ContactsPageState();
@@ -120,11 +118,19 @@ class _ContactsPageState extends State<ContactsPage> {
                     itemBuilder: ((context, index) {
                       return GestureDetector(
                         onTap: () async {
-                          context.read<MessagesBloc>().add(
-                                GetContactUserId(
-                                  phone: searchedContacts[index].phoneNumber,
-                                ),
-                              );
+                          widget.callContact
+                              ? {
+                                  // Navigator.of(context).pushReplacement(
+                                  //   MaterialPageRoute(builder: ((context) {
+                                  //   return const NewCall();
+                                  // })))
+                                }
+                              : context.read<MessagesBloc>().add(
+                                    GetContactUserId(
+                                      phone:
+                                          searchedContacts[index].phoneNumber,
+                                    ),
+                                  );
                           Navigator.push(
                             context,
                             MaterialPageRoute(

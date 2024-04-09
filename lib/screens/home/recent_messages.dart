@@ -59,7 +59,8 @@ class MessagesScreen extends StatelessWidget {
                                 ? state.recentMessages[index].chatUser.fullName
                                 : state
                                     .recentMessages[index].chatUser.phoneNumber,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           Text(
                             state.recentMessages[index].content,
@@ -81,7 +82,9 @@ class MessagesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return const ContactsPage();
+            return const ContactsPage(
+              callContact: false,
+            );
           }));
         },
         child: const Icon(Icons.message),

@@ -1,6 +1,5 @@
 import 'package:domain_models/domain_models.dart';
 import 'package:equatable/equatable.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum MessageFetchState { fetching, fetched, initial }

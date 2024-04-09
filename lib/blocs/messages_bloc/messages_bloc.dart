@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:domain_models/domain_models.dart';
-import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -27,8 +26,9 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
             return _handleRecentMessages(event, recentChats);
           });
         } else if (event is GetContacts) {
-          final state = await _handlegetContacts();
-          emit(state);
+          emit(state.copyWith(fetchState: MessageFetchState.fetching));
+          final newState = await _handlegetContacts();
+          emit(newState.copyWith(fetchState: MessageFetchState.fetched));
         }
       },
       transformer: sequential(),

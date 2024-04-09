@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/login/cubit/login_cubit.dart';
 import 'theme.dart';
 
